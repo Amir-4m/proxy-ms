@@ -125,17 +125,18 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'static'
+STATIC_ROOT = BASE_DIR.parent / 'static'
+STATIC_URL = config('STATIC_URL', default='/static/')
 
-MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR.parent / 'media'
+MEDIA_URL = config('MEDIA_URL', default='/media/')
+
+LOG_DIR = BASE_DIR.parent / 'logs'
 
 FIXTURE_DIRS = (
     BASE_DIR / 'fixtures',
 )
 
-LOG_DIR = BASE_DIR / 'logs'
 LOGGING = ({
     'version': 1,
     'disable_existing_loggers': False,
