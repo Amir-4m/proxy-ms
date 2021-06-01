@@ -18,7 +18,7 @@ from django.urls import path, include
 from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin2b4bb/', admin.site.urls),
     path('api/v1/', include('apps.urls_api')),
     path('docs/', include_docs_urls(title='PROXY MS API DOCUMENTS')),
 
