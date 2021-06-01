@@ -1,0 +1,42 @@
+version: '3.4'
+
+services:
+  django-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: deploy_build
+    entrypoint: [ "/entrypoint.sh" ]
+    env_file: ${PROJECT_ENV}
+    command: uwsgi --ini uwsgi.ini
+    volumes:
+      - ${PROJECT_PATH}/project:/app
+      - ${PROJECT_PATH}/media:/media
+      - ${PROJECT_PATH}/static:/static
+      - ${PROJECT_PATH}/logs:/logs
+    expose:
+      - 8000
+
+  db:
+    image: postgres:13.1
+    hostname: db
+    restart: always
+    environment:
+      POSTGRES_USER=${DB_USER}
+      POSTGRES_PASSWORD=${DB_PASS}
+      POSTGRES_DB=${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - ${PROJECT_PATH}/media:/var/www/media
+      - ${PROJECT_PATH}/static:/var/www/static
+    ports:
+      - ${EXPOSE_PORT}:80
+    depends_on:
+      - django-app
+
+volumes:
+  postgres_data:
