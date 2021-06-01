@@ -1,86 +1,86 @@
-stages:
-  - test
-  - deploy
-
-.staging:
-  only:
-    refs:
-      - develop
-  tags:
-    - docker
-    - staging
-
-.production:
-  only:
-    refs:
-      - master
-    # - /^release-.*$/
-    # except:
-    # - branches
-  tags:
-    - docker
-    - production
-    - domestic
-
-
-.test:
-  stage: test
-  script:
-    - docker-compose -f docker-compose.test.yml build
-    - docker-compose -f docker-compose.test.yml run --rm test-app python manage.py test
-    - docker-compose -f docker-compose.test.yml down --remove-orphans
-  coverage: "/TOTAL.+ ([0-9]{1,3}%)/"
-  artifacts:
-    paths:
-      - htmlcov
-  environment:
-    name: testing
-
-.deploy:
-  stage: deploy
-  script:
-    - cd $PROJECT_PATH
-    - git pull
-    - docker-compose -f docker-compose.yml up --build -d
-
-#build_staging:
+#stages:
+#  - test
+#  - deploy
+#
+#.staging:
+#  only:
+#    refs:
+#      - develop
+#  tags:
+#    - docker
+#    - staging
+#
+#.production:
+#  only:
+#    refs:
+#      - master
+#    # - /^release-.*$/
+#    # except:
+#    # - branches
+#  tags:
+#    - docker
+#    - production
+#    - domestic
+#
+#
+#.test:
+#  stage: test
+#  script:
+#    - docker-compose -f docker-compose.test.yml build
+#    - docker-compose -f docker-compose.test.yml run --rm test-app python manage.py test
+#    - docker-compose -f docker-compose.test.yml down --remove-orphans
+#  coverage: "/TOTAL.+ ([0-9]{1,3}%)/"
+#  artifacts:
+#    paths:
+#      - htmlcov
+#  environment:
+#    name: testing
+#
+#.deploy:
+#  stage: deploy
+#  script:
+#    - cd $PROJECT_PATH
+#    - git pull
+#    - docker-compose -f docker-compose.yml up --build -d
+#
+##build_staging:
+##  environment:
+##    name: staging
+##  extends:
+##    - .build
+##    - .staging
+##
+##build_production:
+##  environment:
+##    name: production
+##  extends:
+##    - .build
+##    - .production
+#
+#test_staging:
 #  environment:
 #    name: staging
 #  extends:
-#    - .build
+#    - .test
 #    - .staging
 #
-#build_production:
+#test_production:
 #  environment:
 #    name: production
 #  extends:
-#    - .build
+#    - .test
 #    - .production
-
-test_staging:
-  environment:
-    name: staging
-  extends:
-    - .test
-    - .staging
-
-test_production:
-  environment:
-    name: production
-  extends:
-    - .test
-    - .production
-
-deploy_staging:
-  environment:
-    name: staging
-  extends:
-    - .deploy
-    - .staging
-
-deploy_production:
-  environment:
-    name: production
-  extends:
-    - .deploy
-    - .production
+#
+#deploy_staging:
+#  environment:
+#    name: staging
+#  extends:
+#    - .deploy
+#    - .staging
+#
+#deploy_production:
+#  environment:
+#    name: production
+#  extends:
+#    - .deploy
+#    - .production
